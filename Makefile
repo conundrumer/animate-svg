@@ -5,10 +5,11 @@ SRC = src
 BUILD = build
 TEST = test-results
 
-BUILD_CMD = ./node_modules/.bin/babel --plugins transform-es2015-modules-commonjs
+BUILD_JS = ./node_modules/.bin/babel --plugins transform-es2015-modules-commonjs
+BUILD_JSX = ./node_modules/.bin/babel --plugins transform-es2015-modules-commonjs,transform-react-jsx
 TEST_CMD := node `node --v8-options | grep harm | awk '{print $$1}' | xargs`
 
-SRC_FILES := $(call rwildcard,$(SRC)/,*.js) $(call rwildcard,$(SRC)/,*.json)
+SRC_FILES := $(call rwildcard,$(SRC)/,*.js) $(call rwildcard,$(SRC)/,*.jsx) $(call rwildcard,$(SRC)/,*.json)
 BUILD_FILES := $(patsubst $(SRC)/%, $(BUILD)/%, $(SRC_FILES))
 TEST_RESULT_FILES := $(patsubst $(SRC)/%.spec.js, $(TEST)/%.tap, $(SRC_FILES))
 
@@ -21,7 +22,11 @@ build: $(BUILD_FILES)
 $(BUILD)/%.js: $(SRC)/%.js
 	@echo Build: $< \> $@
 	@mkdir -p $(@D)
-	@$(BUILD_CMD) $< > $@
+	@$(BUILD_JS) $< > $@
+$(BUILD)/%.jsx: $(SRC)/%.jsx
+	@echo Build: $< \> $@
+	@mkdir -p $(@D)
+	@$(BUILD_JSX) $< > $@
 $(BUILD)/%.json: $(SRC)/%.json
 	@mkdir -p $(@D)
 	cp $< $@
