@@ -3,4 +3,3 @@ build
 test-results
 .DS_Store
 npm-debug.log
-bin
