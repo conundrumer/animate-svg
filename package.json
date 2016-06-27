@@ -1,9 +1,11 @@
 {
-  "name": "name",
+  "name": "generate-svg-animation",
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
+    "start": "npm run clean-out && make && node build/index.js",
+    "clean-out": "rm -f out/*.svg",
     "test": "make test",
     "lint": "./node_modules/.bin/standard 'src/**/*'"
   },
@@ -18,6 +20,10 @@
     "tape": "^4.5.1"
   },
   "dependencies": {
+    "left-pad": "^1.1.0",
+    "pn": "^1.0.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
   },
   "optionalDependencies": {}
 }
