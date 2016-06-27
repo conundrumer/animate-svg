@@ -1,13 +1,25 @@
-import fs from 'pn/fs'
-import leftPad from 'left-pad'
+import {renderToString} from './renderSvg.jsx'
+import Circle from './Circle.jsx'
+import generateGif from './generateGif.js'
 
-import {renderToString} from './render.jsx'
+const delay = 2
+const N = 100
+const width = 100
+const height = 100
 
-const OUT_DIR = 'out'
-const N = 20
-const numDigits = Math.ceil(Math.log10(N))
+let fns = Array(N).fill().map((_, i) =>
+  () => renderToString(
+    {width, height},
+    Circle, {
+      width, height,
+      phase: i / N
+    }
+  )
+)
 
-for (let i = 0; i < N; i++) {
-  fs.writeFile(`${OUT_DIR}/${leftPad(i, numDigits, 0)}.svg`, renderToString(i / N))
-    .catch(e => console.error(e))
-}
+console.log('start')
+Promise.all([
+  generateGif(fns, delay, 'test'),
+  generateGif(fns, delay, 'test2')
+])
+.then(() => console.log('done'))

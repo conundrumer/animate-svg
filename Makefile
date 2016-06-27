@@ -43,9 +43,9 @@ $(TEST)/%.tap: $(BUILD)/%.spec.js $(BUILD)/%/*.js $(BUILD)/%/**/*.js
 
 clean: clean-build clean-test
 clean-build:
-	rm -r $(BUILD)
+	rm -rf $(BUILD)
 clean-test:
-	rm -r $(TEST)
+	rm -rf $(TEST)
 
 watch:
 	@echo Watching for changes...
