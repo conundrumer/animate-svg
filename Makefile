@@ -5,8 +5,8 @@ SRC = src
 BUILD = build
 TEST = test-results
 
-BUILD_JS = ./node_modules/.bin/babel --plugins transform-es2015-modules-commonjs
-BUILD_JSX = ./node_modules/.bin/babel --plugins transform-es2015-modules-commonjs,transform-react-jsx
+BUILD_JS = ./node_modules/.bin/babel --presets es2015-node5
+BUILD_JSX = ./node_modules/.bin/babel --presets es2015-node5 --plugins transform-react-jsx
 TEST_CMD := node `node --v8-options | grep harm | awk '{print $$1}' | xargs`
 
 SRC_FILES := $(call rwildcard,$(SRC)/,*.js) $(call rwildcard,$(SRC)/,*.jsx) $(call rwildcard,$(SRC)/,*.json)
