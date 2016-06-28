@@ -3,7 +3,7 @@ import React from 'react'
 const osc = (phase) => (0.5 + 0.5 * Math.sin(2 * Math.PI * phase))
 
 export default ({phase, revolutions}) => (
-  <g transform={`rotate(${osc(phase) * revolutions * 360}`}>
+  <g transform={`rotate(${osc(phase) * revolutions * 360})`}>
     <line
       x1={0}
       y1={0}
