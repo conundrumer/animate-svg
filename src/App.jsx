@@ -3,8 +3,7 @@ import React from 'react'
 import timer from './timer.js'
 import {makeSvg} from './renderSvg.jsx'
 
-import Spinner from './Spinner.jsx'
-import Circle from './Circle.jsx'
+import SineHannArray from './SineHannArray.jsx'
 
 export default class App extends React.Component {
 
@@ -75,16 +74,10 @@ export default class App extends React.Component {
           phase: {this.state.phase}
         </div>
         {makeSvg(
-          {width: 100, height: 100, style: {border: '1px solid black'}},
-          Spinner, {
-            revolutions: 1,
-            phase: this.state.phase
-          }
-        )}
-        {makeSvg(
-          {width: 100, height: 100, style: {border: '1px solid black'}},
-          Circle, {
-            phase: this.state.phase
+          {width: 300, height: 300, style: {border: '1px solid black'}},
+          SineHannArray, {
+            phase: this.state.phase,
+            freq: 1.253242342342
           }
         )}
       </div>
