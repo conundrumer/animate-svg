@@ -1,6 +1,7 @@
 import {join} from 'path'
 import fs from 'pn/fs'
 import leftPad from 'left-pad'
+import ProgressBar from 'progress'
 
 import im from 'imagemagick'
 import gifsicle from 'gifsicle'
@@ -51,7 +52,13 @@ const getNumDigits = (len) => Math.max(1, Math.ceil(Math.log10(len)))
 // range: [0, N - 1]
 const hann = (N, n) => 0.5 * (1 - Math.cos(2 * Math.PI * (n + 1) / (N + 1))) / (0.5 * N + 0.5)
 
-export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity = 1, delay = 4, name = 'animated'} = {}) {
+export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity = 1, delay = 4, name = 'animated', progress = true} = {}) {
+  let tick = () => {}
+  if (progress) {
+    let bar = new ProgressBar(`rendering ${name} [:bar] :percent`, { total: 1 + frames * blurFrames + frames + 1 + 1 })
+    tick = () => bar.tick()
+    tick()
+  }
   let makeSvgsFns = generateFns(fn, {frames, blurFrames, blurIntensity})
   let N = getNumDigits(makeSvgsFns.length)
 
@@ -76,6 +83,7 @@ export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity 
       let m = leftPad(j, M, 0)
       let svgFilename = join(OUT_DIR, 'svg', `${name}-${n}-${m}.svg`)
       return fs.writeFile(svgFilename, makeSvg())
+        .then(tick)
     }))
       .then(() => convert(
         '-poly', win.map((y) => `${y},1`).join(' '),
@@ -83,6 +91,7 @@ export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity 
         svgBlob,
         pngFilename
       ))
+      .then(tick)
   }))
     .then(() => convert(
       '-delay', delay,
@@ -90,8 +99,10 @@ export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity 
       pngBlob,
       gifFilename
     ))
+    .then(tick)
     .then(() => optimize(
       '--batch', '-O3', gifFilename
     ))
+    .then(tick)
     .catch(e => console.error(e))
 }

@@ -20,6 +20,5 @@ let options = {
   name: 'test'
 }
 
-console.log('start')
 generateGif(fn, options)
 .then(() => console.log('done'))
