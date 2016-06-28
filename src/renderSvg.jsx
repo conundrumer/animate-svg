@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import ReactDOMServer from 'react-dom/server'
 
 const makeSvg = (svgProps, Child, childProps) => (
-  <svg {...svgProps} viewBox={`0 0 ${svgProps.width} ${svgProps.height}`}>
+  <svg {...svgProps}>
     <Child {...childProps} />
   </svg>
 )

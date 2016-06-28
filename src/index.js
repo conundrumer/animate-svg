@@ -1,25 +1,25 @@
 import {renderToString} from './renderSvg.jsx'
-import Pendulum from './Pendulum.jsx'
+import Spinner from './Spinner.jsx'
 import generateGif from './generateGif.js'
 
-const delay = 2
-const N = 20
-const M = 40
 const width = 100
 const height = 100
 
-let fns = Array(N).fill().map((_, i) =>
-  Array(M).fill().map((_, j) =>
-    () => renderToString(
-      {width, height},
-      Pendulum, {
-        width, height,
-        phase: (i + j / M) / N
-      }
-    )
-  )
+let fn = (phase) => renderToString(
+  {width, height, viewBox: '-1 -1 2 2'},
+  Spinner, {
+    revolutions: 6,
+    phase
+  }
 )
+let options = {
+  frames: 100,
+  blurFrames: 30,
+  blurIntensity: 0.5,
+  delay: 4,
+  name: 'test'
+}
 
 console.log('start')
-generateGif(fns, delay, 'test')
+generateGif(fn, options)
 .then(() => console.log('done'))
