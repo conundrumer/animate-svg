@@ -1,6 +1,10 @@
 import React from 'react'
 
 import timer from './timer.js'
+import {makeSvg} from './renderSvg.jsx'
+
+import Spinner from './Spinner.jsx'
+import Circle from './Circle.jsx'
 
 export default class App extends React.Component {
 
@@ -42,30 +46,47 @@ export default class App extends React.Component {
     return (
       <div>
         <div>
-          <label>increment</label>
           <input
+            style={{width: 300}}
             type='range'
-            min={-1}
-            max={1}
+            min={-0.5}
+            max={0.5}
             step={0.00001}
             value={this.state.inc}
             onChange={this._setInc}
           />
+          <label>increment: </label>
           {this.state.inc}
         </div>
         <div>
-          <label>delay</label>
           <input
+            style={{width: 300}}
             type='range'
             min={1}
-            max={10}
+            max={20}
             step={1}
             value={this.state.delay}
             onChange={this._setDelay}
           />
+          <label>delay: </label>
           {this.state.delay}
         </div>
-        phase: {this.state.phase}
+        <div>
+          phase: {this.state.phase}
+        </div>
+        {makeSvg(
+          {width: 100, height: 100, style: {border: '1px solid black'}},
+          Spinner, {
+            revolutions: 1,
+            phase: this.state.phase
+          }
+        )}
+        {makeSvg(
+          {width: 100, height: 100, style: {border: '1px solid black'}},
+          Circle, {
+            phase: this.state.phase
+          }
+        )}
       </div>
     )
   }

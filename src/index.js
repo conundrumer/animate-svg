@@ -6,7 +6,7 @@ const width = 100
 const height = 100
 
 let fn = (phase) => renderToString(
-  {width, height, viewBox: '-1 -1 2 2'},
+  {width, height},
   Spinner, {
     revolutions: 6,
     phase
