@@ -8,34 +8,50 @@ import {execFile} from 'child_process'
 
 const OUT_DIR = join(process.env.PWD, 'out')
 
-export default function generateGif (generateSvgFns, delay = 2, name = 'animated') {
-  let numDigits = Math.ceil(Math.log10(generateSvgFns.length))
+function convert (...args) {
+  return new Promise((resolve, reject) => {
+    im.convert(args, (err, stdout) => {
+      if (err) return reject(err)
+      if (stdout) console.log('stdout:', stdout)
+      resolve()
+    })
+  })
+}
 
-  const outGif = join(OUT_DIR, 'gif', `${name}.gif`)
-  const svgBlob = join(OUT_DIR, 'svg', `${name}-${'?'.repeat(numDigits)}.svg`)
-  const makeSvgName = (i) =>
-    join(OUT_DIR, 'svg', `${name}-${leftPad(i, numDigits, 0)}.svg`)
+function optimize (...args) {
+  return new Promise((resolve, reject) => {
+    execFile(gifsicle, args, (err) => {
+      if (err) return reject(err)
+      resolve()
+    })
+  })
+}
 
-  let imArgs = ['-delay', delay, '-loop', 0, svgBlob, outGif]
-  let gifsicleArgs = ['--batch', '-O3', outGif]
+export default function generateGif (makeSvgFns, delay = 2, name = 'animated') {
+  let N = Math.ceil(Math.log10(makeSvgFns.length))
 
-  let generateSvgs = generateSvgFns.map((fn, i) =>
-    fs.writeFile(makeSvgName(i), fn())
-  )
+  const pngBlob = join(OUT_DIR, 'png', `${name}-${'?'.repeat(N)}.png`)
+  const gifFilename = join(OUT_DIR, 'gif', `${name}.gif`)
 
-  return Promise.all(generateSvgs)
-    .then(() => new Promise((resolve, reject) => {
-      im.convert(imArgs, (err, stdout) => {
-        if (err) return reject(err)
-        if (stdout) console.log('stdout:', stdout)
-        resolve()
-      })
-    }))
-    .then(() => new Promise((resolve, reject) => {
-      execFile(gifsicle, gifsicleArgs, (err) => {
-        if (err) return reject(err)
-        resolve()
-      })
-    }))
+  return Promise.all(makeSvgFns.map((makeSvg, i) => {
+    let index = leftPad(i, N, 0)
+    let svgFilename = join(OUT_DIR, 'svg', `${name}-${index}.svg`)
+    let pngFilename = join(OUT_DIR, 'png', `${name}-${index}.png`)
+
+    return fs.writeFile(svgFilename, makeSvg())
+      .then(() => convert(
+        svgFilename,
+        pngFilename
+      ))
+  }))
+    .then(() => convert(
+      '-delay', delay,
+      '-loop', 0,
+      pngBlob,
+      gifFilename
+    ))
+    .then(() => optimize(
+      '--batch', '-O3', gifFilename
+    ))
     .catch(e => console.error(e))
 }
