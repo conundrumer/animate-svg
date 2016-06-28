@@ -1,11 +1,17 @@
 import React from 'react'
 
-let sin = (x) => Math.sin(2 * Math.PI * x)
-let cos = (x) => Math.cos(2 * Math.PI * x)
+const TAU = 2 * Math.PI
 
-export default function SineHannArray ({s, phase, freq, n = 8}) {
-  let f = (x) => 0.5 + 0.5 * sin(freq * x - phase)
-  let df = (x) => 0.5 * 2 * Math.PI * freq * cos(freq * x - phase)
+let sin = (x) => Math.sin(TAU * x)
+let cos = (x) => Math.cos(TAU * x)
+let hann = (x) => 0.5 - 0.5 * cos(x)
+
+export default function SineHannArray ({s, phase, freq, n = 16}) {
+  let f = (x) => 0.5 + 0.5 * sin(freq * x - phase) * hann(x)
+  let df = (x) => 0.5 * (
+    TAU * freq * cos(freq * x - phase) * hann(x) +
+    sin(freq * x - phase) * 0.5 * TAU * sin(x)
+  )
 
   function makeControlPoint (x1, i, x) {
     if (i === 0) {
