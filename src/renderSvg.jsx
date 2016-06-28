@@ -1,18 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import ReactDOMServer from 'react-dom/server'
 
-const makeSvg = (svgProps, Child, childProps) => (
+export const makeSvg = (svgProps, Child, childProps) => (
   <svg {...svgProps}>
     <Child {...childProps} />
   </svg>
 )
-
-export function makeRenderer (container) {
-  return function render (svgProps, Child, childProps) {
-    ReactDOM.render(makeSvg(svgProps, Child, childProps), container)
-  }
-}
 
 export function renderToString (svgProps, Child, childProps) {
   return ReactDOMServer.renderToStaticMarkup(makeSvg(svgProps, Child, childProps))
