@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run clean-out && make && node index.js",
+    "render": "npm run clean-out && make && node index.js",
     "clean-out": "rm -f out/svg/* & rm -f out/gif/* & rm -f out/png/*",
     "test": "make test",
     "lint": "./node_modules/.bin/standard 'src/**/*'"
