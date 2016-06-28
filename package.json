@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run clean-out && make && node index.js",
-    "clean-out": "rm -f out/svg/* out/gif/*",
+    "clean-out": "rm -f out/svg/* out/gif/* out/png/*",
     "test": "make test",
     "lint": "./node_modules/.bin/standard 'src/**/*'"
   },

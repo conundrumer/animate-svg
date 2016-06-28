@@ -27,20 +27,32 @@ function optimize (...args) {
   })
 }
 
-export default function generateGif (makeSvgFns, delay = 2, name = 'animated') {
-  let N = Math.ceil(Math.log10(makeSvgFns.length))
+const getNumDigits = (len) => Math.max(1, Math.ceil(Math.log10(len)))
+
+export default function generateGif (makeSvgsFns, delay = 2, name = 'animated') {
+  let N = getNumDigits(makeSvgsFns.length)
 
   const pngBlob = join(OUT_DIR, 'png', `${name}-${'?'.repeat(N)}.png`)
   const gifFilename = join(OUT_DIR, 'gif', `${name}.gif`)
 
-  return Promise.all(makeSvgFns.map((makeSvg, i) => {
-    let index = leftPad(i, N, 0)
-    let svgFilename = join(OUT_DIR, 'svg', `${name}-${index}.svg`)
-    let pngFilename = join(OUT_DIR, 'png', `${name}-${index}.png`)
+  return Promise.all(makeSvgsFns.map((makeSvgs, i) => {
+    if (!(makeSvgs instanceof Array)) {
+      makeSvgs = [makeSvgs]
+    }
 
-    return fs.writeFile(svgFilename, makeSvg())
+    let M = getNumDigits(makeSvgs.length)
+    let n = leftPad(i, N, 0)
+    let pngFilename = join(OUT_DIR, 'png', `${name}-${n}.png`)
+    let svgBlob = join(OUT_DIR, 'svg', `${name}-${n}-${'?'.repeat(M)}.svg`)
+
+    return Promise.all(makeSvgs.map((makeSvg, j) => {
+      let m = leftPad(j, M, 0)
+      let svgFilename = join(OUT_DIR, 'svg', `${name}-${n}-${m}.svg`)
+      return fs.writeFile(svgFilename, makeSvg())
+    }))
       .then(() => convert(
-        svgFilename,
+        '-average',
+        svgBlob,
         pngFilename
       ))
   }))
