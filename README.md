@@ -11,3 +11,5 @@ how to run:
 - `npm run render`
 
 modify `src/index.js` to change what is rendered
+
+output gif goes into `out/gif/`
