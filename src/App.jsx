@@ -3,7 +3,7 @@ import React from 'react'
 import timer from './timer.js'
 import {makeSvg} from './renderSvg.jsx'
 
-import SineHannArray from './SineHannArray.jsx'
+import WaveEnvelope from './WaveEnvelope.jsx'
 
 export default class App extends React.Component {
 
@@ -75,9 +75,10 @@ export default class App extends React.Component {
         </div>
         {makeSvg(
           {width: 300, height: 300, style: {border: '1px solid black'}},
-          SineHannArray, {
+          WaveEnvelope, {
             phase: this.state.phase,
-            freq: 1.253242342342
+            freq: 13,
+            array: [0, 1, 1, 0]
           }
         )}
       </div>
