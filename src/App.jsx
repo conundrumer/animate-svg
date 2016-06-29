@@ -3,7 +3,7 @@ import React from 'react'
 import timer from './timer.js'
 import {makeSvg} from './renderSvg.jsx'
 
-import WaveEnvelope from './WaveEnvelope.jsx'
+import WaveEnvelopeRows from './WaveEnvelopeRows.jsx'
 
 export default class App extends React.Component {
 
@@ -42,6 +42,12 @@ export default class App extends React.Component {
   }
 
   render () {
+    let phase = this.state.phase
+    let width = 784 / (295 / 200)
+    let height = 200
+    let x = -(width - height) / height / 2
+    let w = width / height
+
     return (
       <div>
         <div>
@@ -74,13 +80,10 @@ export default class App extends React.Component {
           phase: {this.state.phase}
         </div>
         {makeSvg(
-          {width: 300, height: 300, style: {border: '1px solid black'}},
-          WaveEnvelope, {
-            phase: this.state.phase,
-            freq: 13,
-            array: [0, 1, 0.5, 1, 0]
-          }
-        )}
+          {width: width, height: height, style: {border: '1px solid black'}},
+          WaveEnvelopeRows, {x, w, phase, freq: 15}
+        )
+        }
       </div>
     )
   }

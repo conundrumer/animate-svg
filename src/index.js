@@ -1,23 +1,26 @@
 import {renderToString} from './renderSvg.jsx'
-import Spinner from './Spinner.jsx'
+import WaveEnvelopeRows from './WaveEnvelopeRows.jsx'
 import generateGif from './generateGif.js'
 
-const width = 100
-const height = 100
+const width = 784 / (295 / 200)
+const height = 200
+const x = -(width - height) / height / 2
+const w = width / height
 
 let fn = (phase) => renderToString(
-  {width, height},
-  Spinner, {
-    revolutions: 6,
-    phase
+  {width: width, height: height},
+  WaveEnvelopeRows, {
+    x, w, phase,
+    rev: 30,
+    freq: 15
   }
 )
 let options = {
   frames: 100,
-  blurFrames: 30,
-  blurIntensity: 0.5,
+  blurFrames: 20,
+  blurIntensity: 1,
   delay: 4,
-  name: 'test'
+  name: 'hhdsp3'
 }
 
 generateGif(fn, options)

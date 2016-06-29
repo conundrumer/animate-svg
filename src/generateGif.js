@@ -55,7 +55,7 @@ const hann = (N, n) => 0.5 * (1 - Math.cos(2 * Math.PI * (n + 1) / (N + 1))) / (
 export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity = 1, delay = 4, name = 'animated', progress = true} = {}) {
   let tick = () => {}
   if (progress) {
-    let bar = new ProgressBar(`rendering ${name} [:bar] :percent`, { total: 1 + frames * blurFrames + frames + 1 + 1 })
+    let bar = new ProgressBar(`rendering ${name} [:bar] :percent`, { total: 1 + 2 * frames * blurFrames + frames + 1 + 1 })
     tick = () => bar.tick()
     tick()
   }
@@ -80,6 +80,7 @@ export default function generateGif (fn, {frames, blurFrames = 1, blurIntensity 
     // console.log(win)
 
     return Promise.all(makeSvgs.map((makeSvg, j) => {
+      tick()
       let m = leftPad(j, M, 0)
       let svgFilename = join(OUT_DIR, 'svg', `${name}-${n}-${m}.svg`)
       return fs.writeFile(svgFilename, makeSvg())
