@@ -11,7 +11,7 @@ export default class App extends React.Component {
     super()
     this.state = {
       phase: 0,
-      inc: 1 / (1 << 6),
+      inc: 0,
       delay: 4,
       skipFrames: false
     }
@@ -78,7 +78,7 @@ export default class App extends React.Component {
           WaveEnvelope, {
             phase: this.state.phase,
             freq: 13,
-            array: [0, 1, 1, 0]
+            array: [0, 1, 0.5, 1, 0]
           }
         )}
       </div>
