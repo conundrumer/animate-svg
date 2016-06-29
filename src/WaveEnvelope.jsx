@@ -10,7 +10,7 @@ let cos = (x) => Math.cos(TAU * x)
 let fade = (x) => 0.5 + 0.5 * cos(0.5 * x)
 let dfade = (x) => -0.25 * TAU * sin(0.5 * x)
 
-export default function WaveEnvelope ({s, phase, freq, array, n = 16}) {
+export default function WaveEnvelope ({s, phase, freq, array, n = 16, x = 0, y = 0, w = 1, h = 1}) {
   let N = Math.ceil(freq * n)
   let M = array.length
   let getFades = (x) => {
@@ -33,7 +33,7 @@ export default function WaveEnvelope ({s, phase, freq, array, n = 16}) {
   }
   let denv = (x) => {
     let [k, a0, a1] = getFades(x)
-    return a0 * dfade(k) - a1 * dfade(1 - k)
+    return (M - 1) * (a0 * dfade(k) - a1 * dfade(1 - k))
   }
 
   let f = (x) => C + wav(x) * env(x)
@@ -49,7 +49,7 @@ export default function WaveEnvelope ({s, phase, freq, array, n = 16}) {
   // console.log(path)
   return (
     <g>
-      <Grapher d={path} s={s} fill='none' stroke='black' strokeWidth={s * 0.01} />
+      <Grapher {...{x, y, w, h}} d={path} s={s} fill='none' stroke='#3c4' strokeWidth={s * 0.01} />
     </g>
   )
 }
